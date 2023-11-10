@@ -45,6 +45,23 @@ void drawTrapezoid_NoClip(int x1, int x2, int x3, int x4, int y1, int y2) {
     }
 }
 
+void drawRotateTrapezoid(int y1, int y2, int y3, int y4, int x2, int x1) {
+
+    int n1 = (((y2-y1)*100/(x1-x2)));
+    int n2 = (((y3-y4)*100/(x1-x2)));
+
+    int j = y1 * 100;
+    int k = y4 * 100;
+    int s = 0;
+
+    for (int i = x1; i > x2; i--) {
+        j += n1;
+        k += n2;
+        s = j / 100;
+        gfx_VertLine_NoClip(i, s, k / 100-s);
+    }
+}
+
 
 int main(void)
 {
@@ -94,8 +111,8 @@ int main(void)
         int y2 = 50;  // bottom
         int x1 = 10;  // left
         int x2 = 50;  // middle left
-        int x3 = 240; // middle right
-        int x4 = 250; // right
+        int x3 = 180; // middle right
+        int x4 = 200; // right
 
         /*     x2  x3
             y2 /----\
@@ -103,7 +120,15 @@ int main(void)
              x1       x4
         */
 
-        drawTrapezoid_NoClip(x1, x2, x3, x4, y1, y2);
+       /* x1  x2
+          |\   y1
+          | \  y2
+          | |
+          | /  y3
+          |/   y4
+        */
+
+        drawRotateTrapezoid(x1, x2, x3, x4, y1, y2);
         
 
 
