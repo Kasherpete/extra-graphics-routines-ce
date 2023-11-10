@@ -1,0 +1,10 @@
+{
+    "files.associations": {
+        "stdint.h": "c",
+        "cdefs.h": "c",
+        "functional": "c",
+        "graphx.h": "c",
+        "random": "c"
+    }
+    
+}
