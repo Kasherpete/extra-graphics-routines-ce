@@ -9,7 +9,8 @@
 #include <debug.h>
 
 
-void drawTrapezoid(int x1, int x2, int x3, int x4, int y1, int y2) {
+static void drawTrapezoid(int x1, int x2, int x3, int x4, int y1, int y2) {
+
 
     int n1 = (((x2-x1)*100/(y1-y2)));
     int n2 = (((x3-x4)*100/(y1-y2)));
@@ -18,17 +19,26 @@ void drawTrapezoid(int x1, int x2, int x3, int x4, int y1, int y2) {
     int k = x4 * 100;
     int s = 0;
 
-    for (int i = y1; i > y2; i--) {
-        j += n1;
-        k += n2;
-        s = j / 100;
-        gfx_HorizLine(s, i, k / 100-s);
+    if (y1 < y2) {
+        dbg_printf("%d, %d\n", y2, y1);
+        for (int i = y1; i < y2; i++) {
+            
+            j -= n1;
+            k -= n2;
+            s = j / 100;
+            gfx_HorizLine(s, i, k / 100-s);
+        }
+    } else {
+        for (int i = y1; i > y2; i--) {
+            j += n1;
+            k += n2;
+            s = j / 100;
+            gfx_HorizLine(s, i, k / 100-s);
+        }
     }
 }
 
-
-
-void drawTrapezoid_NoClip(int x1, int x2, int x3, int x4, int y1, int y2) {
+static void drawTrapezoid_NoClip(int x1, int x2, int x3, int x4, int y1, int y2) {
 
     int n1 = (((x2-x1)*100/(y1-y2)));
     int n2 = (((x3-x4)*100/(y1-y2)));
@@ -37,15 +47,26 @@ void drawTrapezoid_NoClip(int x1, int x2, int x3, int x4, int y1, int y2) {
     int k = x4 * 100;
     int s = 0;
 
-    for (int i = y1; i > y2; i--) {
-        j += n1;
-        k += n2;
-        s = j / 100;
-        gfx_HorizLine_NoClip(s, i, k / 100-s);
+    if (y1 < y2) {
+        dbg_printf("%d, %d\n", y2, y1);
+        for (int i = y1; i < y2; i++) {
+            
+            j -= n1;
+            k -= n2;
+            s = j / 100;
+            gfx_HorizLingite_NoClip(s, i, k / 100-s);
+        }
+    } else {
+        for (int i = y1; i > y2; i--) {
+            j += n1;
+            k += n2;
+            s = j / 100;
+            gfx_HorizLine_NoClip(s, i, k / 100-s);
+        }
     }
 }
 
-void drawRotateTrapezoid_NoClip(int y1, int y2, int y3, int y4, int x2, int x1) {
+static void drawRotateTrapezoid_NoClip(int y1, int y2, int y3, int y4, int x2, int x1) {
 
     int n1 = (((y2-y1)*100/(x1-x2)));
     int n2 = (((y3-y4)*100/(x1-x2)));
@@ -54,15 +75,25 @@ void drawRotateTrapezoid_NoClip(int y1, int y2, int y3, int y4, int x2, int x1) 
     int k = y4 * 100;
     int s = 0;
 
-    for (int i = x1; i > x2; i--) {
-        j += n1;
-        k += n2;
-        s = j / 100;
-        gfx_VertLine_NoClip(i, s, k / 100-s);
+    if (x1 < x2) {
+        for (int i = x1; i < x2; i++) {
+            
+            j -= n1;
+            k -= n2;
+            s = j / 100;
+            gfx_VertLine_NoClip(i, s, k / 100-s);
+        }
+    } else {
+        for (int i = x1; i > x2; i--) {
+            j += n1;
+            k += n2;
+            s = j / 100;
+            gfx_VertLine_NoClip(i, s, k / 100-s);
+        }
     }
 }
 
-void drawRotateTrapezoid(int y1, int y2, int y3, int y4, int x2, int x1) {
+static void drawRotateTrapezoid(int y1, int y2, int y3, int y4, int x2, int x1) {
 
     int n1 = (((y2-y1)*100/(x1-x2)));
     int n2 = (((y3-y4)*100/(x1-x2)));
@@ -71,14 +102,23 @@ void drawRotateTrapezoid(int y1, int y2, int y3, int y4, int x2, int x1) {
     int k = y4 * 100;
     int s = 0;
 
-    for (int i = x1; i > x2; i--) {
-        j += n1;
-        k += n2;
-        s = j / 100;
-        gfx_VertLine(i, s, k / 100-s);
+    if (x1 < x2) {
+        for (int i = x1; i < x2; i++) {
+            
+            j -= n1;
+            k -= n2;
+            s = j / 100;
+            gfx_VertLine(i, s, k / 100-s);
+        }
+    } else {
+        for (int i = x1; i > x2; i--) {
+            j += n1;
+            k += n2;
+            s = j / 100;
+            gfx_VertLine(i, s, k / 100-s);
+        }
     }
 }
-
 
 int main(void)
 {
