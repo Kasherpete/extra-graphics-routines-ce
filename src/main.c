@@ -6,8 +6,6 @@
 #include <time.h>
 #include <stdint.h>
 
-#include <debug.h>
-
 
 static void drawTrapezoid(int x1, int x2, int x3, int x4, int y1, int y2) {
 
@@ -20,7 +18,6 @@ static void drawTrapezoid(int x1, int x2, int x3, int x4, int y1, int y2) {
     int s = 0;
 
     if (y1 < y2) {
-        dbg_printf("%d, %d\n", y2, y1);
         for (int i = y1; i < y2; i++) {
             
             j -= n1;
@@ -48,7 +45,6 @@ static void drawTrapezoid_NoClip(int x1, int x2, int x3, int x4, int y1, int y2)
     int s = 0;
 
     if (y1 < y2) {
-        dbg_printf("%d, %d\n", y2, y1);
         for (int i = y1; i < y2; i++) {
             
             j -= n1;
