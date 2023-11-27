@@ -22,13 +22,22 @@ static void drawTrapezoid(int x1, int x2, int x3, int x4, int y1, int y2) {
             
             j -= n1;
             k -= n2;
+            
+            if (i < 0 || i > GFX_LCD_HEIGHT)
+            continue;
+
             s = j / 100;
             gfx_HorizLine(s, i, k / 100-s);
         }
     } else {
         for (int i = y1; i > y2; i--) {
+
             j += n1;
             k += n2;
+            
+            if (i < 0 || i > GFX_LCD_HEIGHT)
+            continue;
+
             s = j / 100;
             gfx_HorizLine(s, i, k / 100-s);
         }
@@ -49,13 +58,22 @@ static void drawTrapezoid_NoClip(int x1, int x2, int x3, int x4, int y1, int y2)
             
             j -= n1;
             k -= n2;
+            
+            if (i < 0 || i > GFX_LCD_HEIGHT)
+            continue;
+
             s = j / 100;
-            gfx_HorizLingite_NoClip(s, i, k / 100-s);
+            gfx_HorizLine_NoClip(s, i, k / 100-s);
         }
     } else {
         for (int i = y1; i > y2; i--) {
+
             j += n1;
             k += n2;
+            
+            if (i < 0 || i > GFX_LCD_HEIGHT)
+            continue;
+
             s = j / 100;
             gfx_HorizLine_NoClip(s, i, k / 100-s);
         }
@@ -76,13 +94,22 @@ static void drawRotateTrapezoid_NoClip(int y1, int y2, int y3, int y4, int x2, i
             
             j -= n1;
             k -= n2;
+            
+            if (i < 0)
+            continue;
+
             s = j / 100;
             gfx_VertLine_NoClip(i, s, k / 100-s);
         }
     } else {
         for (int i = x1; i > x2; i--) {
+
             j += n1;
             k += n2;
+
+            if (i > GFX_LCD_WIDTH)
+            continue;
+
             s = j / 100;
             gfx_VertLine_NoClip(i, s, k / 100-s);
         }
@@ -100,21 +127,46 @@ static void drawRotateTrapezoid(int y1, int y2, int y3, int y4, int x2, int x1) 
 
     if (x1 < x2) {
         for (int i = x1; i < x2; i++) {
-            
+
             j -= n1;
             k -= n2;
+            
+            if (i < 0)
+            continue;
+
+            
             s = j / 100;
             gfx_VertLine(i, s, k / 100-s);
         }
     } else {
         for (int i = x1; i > x2; i--) {
+
             j += n1;
             k += n2;
+
+            if (i > GFX_LCD_WIDTH)
+            continue;
+
+            
             s = j / 100;
             gfx_VertLine(i, s, k / 100-s);
         }
     }
 }
+
+/*     x2  x3
+    y2 /----\
+    y1/______\
+     x1       x4
+*/
+
+/* x1  x2
+    |\   y1
+    | \  y2
+    | |
+    | /  y3
+    |/   y4
+*/
 
 int main(void)
 {
