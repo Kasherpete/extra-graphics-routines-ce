@@ -5,9 +5,92 @@
 #include <math.h>
 #include <time.h>
 #include <stdint.h>
+#include <debug.h>
 
 
 #define TRAPEZOID_QUALITY 64  // keep at multiple of 2
+
+
+void drawBoxFill(int x, int y, int block_size, int top_block_size, int total_size, int x_total_size) {
+
+    int side_slope = (abs(x_total_size)-block_size)*TRAPEZOID_QUALITY / (abs(total_size)-top_block_size);
+    int slope = (abs(x_total_size)-top_block_size)*TRAPEZOID_QUALITY / (abs(total_size)-block_size);
+
+    int a = block_size*TRAPEZOID_QUALITY;
+    int b = x*TRAPEZOID_QUALITY;
+
+    if (x_total_size < 0) {
+        side_slope = -abs(side_slope);
+        slope = -abs(slope);
+        a = -(block_size*TRAPEZOID_QUALITY);
+    } else {
+        side_slope = abs(side_slope);
+        slope = abs(slope);
+    }
+    if (total_size > 0) {
+        gfx_SetColor(gfx_red);
+        for (int i = y; i < block_size+y; i++) {
+            
+            if (x_total_size < 0)
+                gfx_HorizLine(x+a/TRAPEZOID_QUALITY, i, abs(a/TRAPEZOID_QUALITY));
+            else
+                gfx_HorizLine(x, i, a/TRAPEZOID_QUALITY);
+            
+            a += side_slope;
+        }
+        for (int i = block_size+y; i < total_size-top_block_size+y; i++) {
+            
+            if (x_total_size < 0)
+                gfx_HorizLine(b/TRAPEZOID_QUALITY+a/TRAPEZOID_QUALITY, i, abs(a/TRAPEZOID_QUALITY));
+            else
+                gfx_HorizLine(b/TRAPEZOID_QUALITY, i, a/TRAPEZOID_QUALITY);
+            
+            b += slope;
+            a -= slope-side_slope;
+        }
+        for (int i = abs(total_size)-top_block_size+y; i < abs(total_size)+y; i++) {
+            
+            if (x_total_size < 0)
+                gfx_HorizLine(b/TRAPEZOID_QUALITY+a/TRAPEZOID_QUALITY, i, abs(a/TRAPEZOID_QUALITY));
+            else
+                gfx_HorizLine(b/TRAPEZOID_QUALITY, i, a/TRAPEZOID_QUALITY);
+
+            b += slope;
+            a -= slope;
+        }
+    } else {
+        for (int i = y; i > y-block_size; i--) {
+            
+            if (x_total_size < 0)
+                gfx_HorizLine(x+a/TRAPEZOID_QUALITY, i, abs(a/TRAPEZOID_QUALITY));
+            else
+                gfx_HorizLine(x, i, a/TRAPEZOID_QUALITY);
+            
+            a += side_slope;
+        }
+        for (int i = y-block_size; i > y-abs(total_size)+top_block_size; i--) {
+            
+            if (x_total_size < 0)
+                gfx_HorizLine(b/TRAPEZOID_QUALITY+a/TRAPEZOID_QUALITY, i, abs(a/TRAPEZOID_QUALITY));
+            else
+                gfx_HorizLine(b/TRAPEZOID_QUALITY, i, a/TRAPEZOID_QUALITY);
+            
+            b += slope;
+            a -= slope-side_slope;
+        }
+        for (int i = y-abs(total_size)+top_block_size; i > y-abs(total_size); i--) {
+            
+            if (x_total_size < 0)
+                gfx_HorizLine(b/TRAPEZOID_QUALITY+a/TRAPEZOID_QUALITY, i, abs(a/TRAPEZOID_QUALITY));
+            else
+                gfx_HorizLine(b/TRAPEZOID_QUALITY, i, a/TRAPEZOID_QUALITY);
+            
+            b += slope;
+            a -= slope;
+        }
+    }
+}
+
 
 static void drawTrapezoid(int x1, int x2, int x3, int x4, int y1, int y2) {
 
@@ -214,12 +297,12 @@ int main(void)
         gfx_SetTextXY(35,5);
         gfx_PrintUInt(fps, 2);
 
-        int y1 = 200; // top
-        int y2 = 50;  // bottom
-        int x1 = 10;  // left
-        int x2 = 50;  // middle left
-        int x3 = 180; // middle right
-        int x4 = 200; // right
+        // int y1 = 200; // top
+        // int y2 = 50;  // bottom
+        // int x1 = 10;  // left
+        // int x2 = 50;  // middle left
+        // int x3 = 180; // middle right
+        // int x4 = 200; // right
 
         /*     x2  x3
             y2 /----\
@@ -235,7 +318,11 @@ int main(void)
           |/   y4
         */
 
-        drawRotateTrapezoid(x1, x2, x3, x4, y1, y2);
+        // drawRotateTrapezoid(x1, x2, x3, x4, y1, y2);
+        drawBoxFill(120, 120, 20, 10, -50, -130);
+        gfx_SetColor(gfx_orange);
+        gfx_HorizLine(120, 120, 50);
+        gfx_VertLine(120, 70, 50);
         
 
 
