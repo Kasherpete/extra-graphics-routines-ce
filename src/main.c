@@ -11,24 +11,20 @@
 #define TRAPEZOID_QUALITY 64  // keep at multiple of 2
 
 
-void drawBoxFill(int x, int y, int block_size, int top_block_size, int total_size, int x_total_size) {
+void drawBoxFill(int x, int y, uint24_t block_size, uint24_t top_block_size, int total_size, int x_total_size) {
 
-    int side_slope = (abs(x_total_size)-block_size)*TRAPEZOID_QUALITY / (abs(total_size)-top_block_size);
-    int slope = (abs(x_total_size)-top_block_size)*TRAPEZOID_QUALITY / (abs(total_size)-block_size);
+    uint24_t side_slope = abs((abs(x_total_size)-block_size)*TRAPEZOID_QUALITY / (abs(total_size)-top_block_size));
+    uint24_t slope = abs((abs(x_total_size)-top_block_size)*TRAPEZOID_QUALITY / (abs(total_size)-block_size));
 
-    int a = block_size*TRAPEZOID_QUALITY;
+    uint24_t a = block_size*TRAPEZOID_QUALITY;
     int b = x*TRAPEZOID_QUALITY;
 
     if (x_total_size < 0) {
-        side_slope = -abs(side_slope);
-        slope = -abs(slope);
+        side_slope = -side_slope;
+        slope = -slope;
         a = -(block_size*TRAPEZOID_QUALITY);
-    } else {
-        side_slope = abs(side_slope);
-        slope = abs(slope);
     }
     if (total_size > 0) {
-        gfx_SetColor(gfx_red);
         for (int i = y; i < block_size+y; i++) {
             
             if (x_total_size < 0)
@@ -84,6 +80,82 @@ void drawBoxFill(int x, int y, int block_size, int top_block_size, int total_siz
                 gfx_HorizLine(b/TRAPEZOID_QUALITY+a/TRAPEZOID_QUALITY, i, abs(a/TRAPEZOID_QUALITY));
             else
                 gfx_HorizLine(b/TRAPEZOID_QUALITY, i, a/TRAPEZOID_QUALITY);
+            
+            b += slope;
+            a -= slope;
+        }
+    }
+}
+
+void drawBoxFill_NoClip(uint24_t x, uint8_t y, uint24_t block_size, uint24_t top_block_size, int total_size, int x_total_size) {
+
+    uint24_t side_slope = abs((abs(x_total_size)-block_size)*TRAPEZOID_QUALITY / (abs(total_size)-top_block_size));
+    uint24_t slope = abs((abs(x_total_size)-top_block_size)*TRAPEZOID_QUALITY / (abs(total_size)-block_size));
+
+    uint24_t a = block_size*TRAPEZOID_QUALITY;
+    uint24_t b = x*TRAPEZOID_QUALITY;
+
+    if (x_total_size < 0) {
+        side_slope = -side_slope;
+        slope = -slope;
+        a = -(block_size*TRAPEZOID_QUALITY);
+    }
+    if (total_size > 0) {
+        for (uint8_t i = y; i < block_size+y; i++) {
+            
+            if (x_total_size < 0)
+                gfx_HorizLine_NoClip(x+a/TRAPEZOID_QUALITY, i, abs(a/TRAPEZOID_QUALITY));
+            else
+                gfx_HorizLine_NoClip(x, i, a/TRAPEZOID_QUALITY);
+            
+            a += side_slope;
+        }
+        for (uint8_t i = block_size+y; i < total_size-top_block_size+y; i++) {
+            
+            if (x_total_size < 0)
+                gfx_HorizLine_NoClip(b/TRAPEZOID_QUALITY+a/TRAPEZOID_QUALITY, i, abs(a/TRAPEZOID_QUALITY));
+            else
+                gfx_HorizLine_NoClip(b/TRAPEZOID_QUALITY, i, a/TRAPEZOID_QUALITY);
+            
+            b += slope;
+            a -= slope-side_slope;
+        }
+        for (uint8_t i = abs(total_size)-top_block_size+y; i < abs(total_size)+y; i++) {
+            
+            if (x_total_size < 0)
+                gfx_HorizLine_NoClip(b/TRAPEZOID_QUALITY+a/TRAPEZOID_QUALITY, i, abs(a/TRAPEZOID_QUALITY));
+            else
+                gfx_HorizLine_NoClip(b/TRAPEZOID_QUALITY, i, a/TRAPEZOID_QUALITY);
+
+            b += slope;
+            a -= slope;
+        }
+    } else {
+        for (uint8_t i = y; i > y-block_size; i--) {
+            
+            if (x_total_size < 0)
+                gfx_HorizLine_NoClip(x+a/TRAPEZOID_QUALITY, i, abs(a/TRAPEZOID_QUALITY));
+            else
+                gfx_HorizLine_NoClip(x, i, a/TRAPEZOID_QUALITY);
+            
+            a += side_slope;
+        }
+        for (uint8_t i = y-block_size; i > y-abs(total_size)+top_block_size; i--) {
+            
+            if (x_total_size < 0)
+                gfx_HorizLine_NoClip(b/TRAPEZOID_QUALITY+a/TRAPEZOID_QUALITY, i, abs(a/TRAPEZOID_QUALITY));
+            else
+                gfx_HorizLine_NoClip(b/TRAPEZOID_QUALITY, i, a/TRAPEZOID_QUALITY);
+            
+            b += slope;
+            a -= slope-side_slope;
+        }
+        for (uint8_t i = y-abs(total_size)+top_block_size; i > y-abs(total_size); i--) {
+            
+            if (x_total_size < 0)
+                gfx_HorizLine_NoClip(b/TRAPEZOID_QUALITY+a/TRAPEZOID_QUALITY, i, abs(a/TRAPEZOID_QUALITY));
+            else
+                gfx_HorizLine_NoClip(b/TRAPEZOID_QUALITY, i, a/TRAPEZOID_QUALITY);
             
             b += slope;
             a -= slope;
@@ -319,7 +391,7 @@ int main(void)
         */
 
         // drawRotateTrapezoid(x1, x2, x3, x4, y1, y2);
-        drawBoxFill(120, 120, 20, 10, -50, -130);
+        drawBoxFill(120, 120, 20, 20, -50, 50);
         gfx_SetColor(gfx_orange);
         gfx_HorizLine(120, 120, 50);
         gfx_VertLine(120, 70, 50);
